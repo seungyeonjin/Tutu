@@ -4,24 +4,37 @@ struct CalendarView: View {
     
     @EnvironmentObject var dateHolder: DateHolder
     
+    @State private var isShowingAddSheet: Bool = false
+    
     var body: some View {
-        
-        VStack(spacing: 10) {
-            HStack {
-                Spacer()
-                Button(action: previousMonth) {
-                    Image(systemName: "arrow.left")
+        NavigationView {
+            VStack(spacing: 10) {
+                HStack {
+                    Spacer()
+                    Button(action: previousMonth) {
+                        Image(systemName: "arrow.left")
+                    }
+                    Text(CalendarHelper().monthYearString(dateHolder.date))
+                        .font(.title2)
+                    Button(action: nextMonth) {
+                        Image(systemName: "arrow.right")
+                    }
+                    Spacer()
                 }
-                Text(CalendarHelper().monthYearString(dateHolder.date))
-                    .font(.title2)
-                Button(action: previousMonth) {
-                    Image(systemName: "arrow.right")
+                dayOfWeekStack
+                calendarGrid
+            } //: VSTACK
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { isShowingAddSheet = true }) {
+                        Label("Add Lesson", systemImage: "plus")
+                    }
+                    .sheet(isPresented: $isShowingAddSheet) {
+                        AddLessonView()
+                    }
                 }
-                Spacer()
             }
-            dayOfWeekStack
-            calendarGrid
-        } //: VSTACK
+        }
     }
     
     var dayOfWeekStack: some View {
@@ -45,13 +58,16 @@ struct CalendarView: View {
             let startingSpaces = CalendarHelper().weekDay(firstDayOfMonth)
             let prevMonth = CalendarHelper().minusMonth(dateHolder.date)
             let daysInPrevMonth = CalendarHelper().daysInMonth(prevMonth)
+            let currentMonth = CalendarHelper().currentMonth(dateHolder.date)
+            let currentYear = CalendarHelper().currentYear(dateHolder.date)
             
             ForEach(0..<6) { row in
                 HStack(spacing: 1) {
                     ForEach(1..<8) { column in
                         let count = column + (row * 7)
-                        CalendarCell(count: count, startingSpaces: startingSpaces, daysInMonth: daysInMonth, daysInPrevMonth: daysInPrevMonth)
+                        CalendarCell(count: count, startingSpaces: startingSpaces, daysInMonth: daysInMonth, daysInPrevMonth: daysInPrevMonth, month: currentMonth, year: currentYear)
                             .environmentObject(dateHolder)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
             }

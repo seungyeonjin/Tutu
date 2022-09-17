@@ -2,7 +2,7 @@
 //  Student+CoreDataProperties.swift
 //  Tutu
 //
-//  Created by 진승연 on 2022/09/16.
+//  Created by 진승연 on 2022/09/17.
 //
 //
 
@@ -17,9 +17,27 @@ extension Student {
     }
 
     @NSManaged public var id: UUID?
-    @NSManaged public var name: String?
     @NSManaged public var location: String?
+    @NSManaged public var name: String?
     @NSManaged public var timestamp: Date?
+    @NSManaged public var lessons: NSSet?
+
+}
+
+// MARK: Generated accessors for lessons
+extension Student {
+
+    @objc(addLessonsObject:)
+    @NSManaged public func addToLessons(_ value: Lesson)
+
+    @objc(removeLessonsObject:)
+    @NSManaged public func removeFromLessons(_ value: Lesson)
+
+    @objc(addLessons:)
+    @NSManaged public func addToLessons(_ values: NSSet)
+
+    @objc(removeLessons:)
+    @NSManaged public func removeFromLessons(_ values: NSSet)
 
 }
 

@@ -8,7 +8,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            TodayScheduleView(today: dateHolder.date)
+            TodayScheduleView()
                 .environmentObject(dateHolder)
                 .environment(\.managedObjectContext, viewContext)
                 .tabItem {

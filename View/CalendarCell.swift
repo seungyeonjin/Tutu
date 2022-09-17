@@ -4,16 +4,18 @@ struct CalendarCell: View {
     
     @EnvironmentObject var dateHolder: DateHolder
     
-    let count: Int
+    let count: Int // day
     let startingSpaces: Int
     let daysInMonth : Int
     let daysInPrevMonth: Int
+    let month: Int
+    let year: Int
     
     var body: some View {
         VStack {
             Text(monthStruct().day())
                 .foregroundColor(textColor(type: monthStruct().monthType))
-            InsetCalendarCellView(date: dateHolder.date)
+            InsetCalendarCellView(year: year, month: month, day: count)
         }
     }
     
@@ -38,7 +40,7 @@ struct CalendarCell: View {
 struct CalendarCell_Previews: PreviewProvider {
     static let dateHolder = DateHolder()
     static var previews: some View {
-        CalendarCell(count: 1, startingSpaces: 1, daysInMonth: 1, daysInPrevMonth: 1)
+        CalendarCell(count: 1, startingSpaces: 1, daysInMonth: 1, daysInPrevMonth: 1, month: 1, year: 1998)
             .environmentObject(dateHolder)
             .previewLayout(.sizeThatFits)
             .padding()

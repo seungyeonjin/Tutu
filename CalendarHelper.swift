@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 class CalendarHelper {
     var calendar = Calendar.current
@@ -30,6 +31,16 @@ class CalendarHelper {
         // returns the day component from date
         // ex) april 29th -> 29
         return components.day!
+    }
+    
+    func currentMonth(_ date: Date) -> Int {
+        let components = calendar.dateComponents([.month], from: date)
+        return components.month!
+    }
+    
+    func currentYear(_ date: Date) -> Int {
+        let components = calendar.dateComponents([.year], from: date)
+        return components.year!
     }
     
     func firstOfMonth(_ date: Date) -> Date {
