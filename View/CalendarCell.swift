@@ -13,7 +13,7 @@ struct CalendarCell: View {
         VStack {
             Text(monthStruct().day())
                 .foregroundColor(textColor(type: monthStruct().monthType))
-            InsetCalendarCellView()
+            InsetCalendarCellView(date: dateHolder.date)
         }
     }
     

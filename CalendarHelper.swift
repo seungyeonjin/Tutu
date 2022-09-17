@@ -1,7 +1,7 @@
 import Foundation
 
 class CalendarHelper {
-    let calendar = Calendar.current
+    var calendar = Calendar.current
     let dateFormatter = DateFormatter()
     
     func monthYearString(_ date: Date) -> String {
@@ -41,4 +41,5 @@ class CalendarHelper {
         let components = calendar.dateComponents([.weekday], from: date)
         return components.weekday!-1
     }
+
 }

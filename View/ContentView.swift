@@ -9,6 +9,7 @@ struct ContentView: View {
     var body: some View {
         TabView {
             TodayScheduleView(today: dateHolder.date)
+                .environmentObject(dateHolder)
                 .environment(\.managedObjectContext, viewContext)
                 .tabItem {
                     Image(systemName: "house")
