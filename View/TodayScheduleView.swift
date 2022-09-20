@@ -11,16 +11,24 @@ struct TodayScheduleView: View {
         NavigationView {
             VStack {
                 ForEach(todayLesson) { lesson in
-                    HStack {
-                        Image(systemName: "octagon")
-                        VStack {
-                            Text("\(lesson.title ?? "Title")")
-                                .font(.footnote)
-                        }
+                    VStack(alignment: .leading) {
+                        Text("\(lesson.title ?? "")")
+                            .font(.myCustomFont(size: 14))
+                
+                        ScheduleLessonCardView(lesson: lesson)
+                        Spacer()
                     }
+                    .padding()
                 }
             }
-            .navigationTitle("Today")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Today")
+                        .font(.system(size: 20, design: .serif))
+                      .foregroundColor(Color.black)
+                }
+            }
         }
     }
     

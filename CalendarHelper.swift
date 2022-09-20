@@ -6,7 +6,7 @@ class CalendarHelper {
     let dateFormatter = DateFormatter()
     
     func monthYearString(_ date: Date) -> String {
-        dateFormatter.dateFormat = "LLL yyyy"
+        dateFormatter.dateFormat = "MM.yyyy"
         return dateFormatter.string(from: date)
     }
     

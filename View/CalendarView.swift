@@ -6,25 +6,43 @@ struct CalendarView: View {
     
     @State private var isShowingAddSheet: Bool = false
     
+    let salmon = Color(hue: 0.02, saturation: 0.4, brightness: 1)
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 10) {
                 HStack {
                     Spacer()
                     Button(action: previousMonth) {
-                        Image(systemName: "arrow.left")
+                        ZStack {
+                            Image(systemName: "arrowtriangle.left.fill")
+                                .foregroundColor(salmon)
+                            Image(systemName: "arrowtriangle.left")
+                                .foregroundColor(Color.black)
+                        }
                     }
                     Text(CalendarHelper().monthYearString(dateHolder.date))
-                        .font(.title2)
+                        .font(.myCustomFont(size: 20))
                     Button(action: nextMonth) {
-                        Image(systemName: "arrow.right")
+                        ZStack {
+                            Image(systemName: "arrowtriangle.right.fill")
+                                .foregroundColor(salmon)
+                            Image(systemName: "arrowtriangle.right")
+                                .foregroundColor(Color.black)
+                        }
                     }
                     Spacer()
                 }
                 dayOfWeekStack
                 calendarGrid
             } //: VSTACK
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                        Text("Monthly Schedule")
+                            .font(.system(size: 20, design: .serif))
+                          .foregroundColor(Color.black)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { isShowingAddSheet = true }) {
                         Label("Add Lesson", systemImage: "plus")
@@ -67,7 +85,7 @@ struct CalendarView: View {
                         let count = column + (row * 7)
                         CalendarCell(count: count, startingSpaces: startingSpaces, daysInMonth: daysInMonth, daysInPrevMonth: daysInPrevMonth, month: currentMonth, year: currentYear)
                             .environmentObject(dateHolder)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .frame(width: 50, height: 85)
                     }
                 }
             }

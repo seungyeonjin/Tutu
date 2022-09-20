@@ -41,11 +41,22 @@ struct AddLessonView: View {
             }
             .navigationTitle("Add new lesson")
             .toolbar {
-                Button() {
-                    createLesson()
-                    dismiss()
-                } label: {
-                    Image(systemName: "checkmark.rectangle")
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button() {
+                        dismiss()
+                    } label: {
+                        Text("Cancel")
+                            .foregroundColor(Color.black)
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button() {
+                        createLesson()
+                        dismiss()
+                    } label: {
+                        Image(systemName: "checkmark.rectangle")
+                            .foregroundColor(Color.black)
+                    }
                 }
             }
         }

@@ -4,7 +4,7 @@ struct CalendarCell: View {
     
     @EnvironmentObject var dateHolder: DateHolder
     
-    let count: Int // day
+    let count: Int
     let startingSpaces: Int
     let daysInMonth : Int
     let daysInPrevMonth: Int
@@ -12,11 +12,18 @@ struct CalendarCell: View {
     let year: Int
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading, spacing: 0) {
             Text(monthStruct().day())
                 .foregroundColor(textColor(type: monthStruct().monthType))
-            InsetCalendarCellView(year: year, month: month, day: count)
+                .font(.footnote)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .padding(1)
+            InsetCalendarCellView(year: year, month: month, day: monthStruct().dayInt)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+            Spacer()
         }
+        .padding(5)
+        .frame(width: 50, height: 85)
     }
     
     func textColor(type: MonthType) -> Color {

@@ -7,14 +7,19 @@ struct InsetCalendarCellView: View {
 
     @FetchRequest private var lessons: FetchedResults<Lesson>
     
+    let lemonYellow = Color(hue: 0.16, saturation: 0.4, brightness: 1)
+    
     var body: some View {
-        
-        ForEach(lessons) { lesson in
-            HStack {
-                Image(systemName: "octagon")
-                VStack {
+        VStack(alignment: .leading, spacing: 1) {
+            ForEach(lessons) { lesson in
+                ZStack {
                     Text("\(lesson.title ?? "Title")")
-                        .font(.footnote)
+                        .font(.caption2)
+                        .padding(1)
+                        .frame(alignment: .leading)
+                        .background(lemonYellow)
+                        .overlay(RoundedRectangle(cornerRadius: 4)
+                            .stroke(Color.black, lineWidth: 1))
                 }
             }
         }
@@ -37,14 +42,14 @@ struct InsetCalendarCellView: View {
         _lessons = FetchRequest<Lesson>(sortDescriptors: [], predicate: datePredicate)
     }
 }
-/*
+
 struct InsetCalendarCellView_Previews:
     PreviewProvider {
     static let dateHolder = DateHolder()
     static var previews: some View {
-        InsetCalendarCellView()
+        InsetCalendarCellView(year: 2022, month: 9, day: 20)
             .previewLayout(.sizeThatFits)
             .padding()
     }
 }
- */
+

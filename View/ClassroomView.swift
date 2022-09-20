@@ -60,13 +60,22 @@ struct ClassroomView: View {
                     .onDelete(perform: deleteStudent)
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Classroom")
+                        .font(.system(size: 20, design: .serif))
+                      .foregroundColor(Color.black)
+                }
                 ToolbarItem(placement: .navigationBarLeading) {
                     EditButton()
+                        .font(.system(size: 17, design: .serif))
+                      .foregroundColor(Color.black)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: addStudent) {
                         Label("Add Item", systemImage: "plus")
+                          .foregroundColor(Color.black)
                     }
                 }
             }
