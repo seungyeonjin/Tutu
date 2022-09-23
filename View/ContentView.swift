@@ -2,45 +2,30 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @EnvironmentObject var dateHolder: DateHolder
-    
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject var viewModel: AppViewModel
     
     var body: some View {
-        TabView {
-            TodayScheduleView()
-                .environmentObject(dateHolder)
-                .environment(\.managedObjectContext, viewContext)
-                .tabItem {
-                    Image(systemName: "house")
-                }
-            CalendarView()
-                .tabItem {
-                    Image(systemName: "calendar")
-                }
-                .environmentObject(dateHolder)
-            
-            ClassroomView()
-                .environment(\.managedObjectContext, viewContext)
-                .tabItem {
-                    Image(systemName: "studentdesk")
-                }
-            NavigationView {
-                NavigationLink("Navigate") {
+        VStack {
+            if !viewModel.signedIn {
+                SignInView()
+                    .environmentObject(viewModel)
                     
+            } else {
+                let dateHolder = DateHolder()
+                HomeView()
+                    .environmentObject(dateHolder)
+                    .environment(\.managedObjectContext, viewContext)
                 }
-            }
-                .tabItem {
-                    Image(systemName: "person.crop.circle")
-                }
+        }
+        .onAppear {
+            viewModel.signedIn = viewModel.isSignedIn
         }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
-    static let dateHolder = DateHolder()
     static var previews: some View {
         ContentView()
-            .environmentObject(dateHolder)
     }
 }
