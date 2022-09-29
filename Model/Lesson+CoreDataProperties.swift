@@ -1,8 +1,8 @@
 //
 //  Lesson+CoreDataProperties.swift
-//  Tutu
+//  
 //
-//  Created by 진승연 on 2022/09/17.
+//  Created by 진승연 on 2022/09/28.
 //
 //
 
@@ -16,32 +16,14 @@ extension Lesson {
         return NSFetchRequest<Lesson>(entityName: "Lesson")
     }
 
+    @NSManaged public var color: NSObject?
+    @NSManaged public var content: String?
     @NSManaged public var done: Bool
-    @NSManaged public var id: UUID?
-    @NSManaged public var title: String?
-    @NSManaged public var startDate: Date?
     @NSManaged public var endDate: Date?
-    @NSManaged public var students: NSSet?
-
-}
-
-// MARK: Generated accessors for students
-extension Lesson {
-
-    @objc(addStudentsObject:)
-    @NSManaged public func addToStudents(_ value: Student)
-
-    @objc(removeStudentsObject:)
-    @NSManaged public func removeFromStudents(_ value: Student)
-
-    @objc(addStudents:)
-    @NSManaged public func addToStudents(_ values: NSSet)
-
-    @objc(removeStudents:)
-    @NSManaged public func removeFromStudents(_ values: NSSet)
-
-}
-
-extension Lesson : Identifiable {
+    @NSManaged public var id: UUID?
+    @NSManaged public var location: String?
+    @NSManaged public var startDate: Date?
+    @NSManaged public var title: String?
+    @NSManaged public var student: Student?
 
 }

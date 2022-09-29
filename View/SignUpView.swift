@@ -14,13 +14,17 @@ struct SignUpView: View {
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
                     .padding()
-                    .background(Color(.secondarySystemBackground))
+                    .background(Color.white.opacity(0))
+                    .overlay(RoundedRectangle(cornerRadius: 2)
+                        .strokeBorder(Color.black, lineWidth: 1))
                     
-                SecureField("Email Address", text: $password)
+                SecureField("Password", text: $password)
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
                     .padding()
-                    .background(Color(.secondarySystemBackground))
+                    .background(Color.white.opacity(0))
+                    .overlay(RoundedRectangle(cornerRadius: 2)
+                        .strokeBorder(Color.black, lineWidth: 1))
                 
                 Button(action: {
                     
@@ -31,16 +35,24 @@ struct SignUpView: View {
                     viewModel.signUp(email: email, password: password)
                     
                 }, label: {
-                    Text("Create Account")
-                        .foregroundColor(Color.white)
-                        .frame(width: 200, height: 50)
-                        .cornerRadius(8)
-                        .background(Color.blue)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color.gray, strokeColor: Color.black)
+                        Text("Create Account")
+                            .font(.myCustomFont(size: 18))
+                            .foregroundColor(Color.white)
+                    }
+                    .frame(width: 200, height: 50)
                 })
-                Spacer()
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Create Account")
+                        .font(.myCustomFont(size: 20))
+                }
             }
             .padding()
-            .navigationTitle("Create Account")
         }
     }
 }

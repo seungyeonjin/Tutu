@@ -1,8 +1,8 @@
 //
 //  Student+CoreDataProperties.swift
-//  Tutu
+//  
 //
-//  Created by 진승연 on 2022/09/17.
+//  Created by 진승연 on 2022/09/28.
 //
 //
 
@@ -16,6 +16,7 @@ extension Student {
         return NSFetchRequest<Student>(entityName: "Student")
     }
 
+    @NSManaged public var color: NSObject?
     @NSManaged public var id: UUID?
     @NSManaged public var location: String?
     @NSManaged public var name: String?
@@ -38,9 +39,5 @@ extension Student {
 
     @objc(removeLessons:)
     @NSManaged public func removeFromLessons(_ values: NSSet)
-
-}
-
-extension Student : Identifiable {
 
 }

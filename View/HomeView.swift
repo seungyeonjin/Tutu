@@ -15,24 +15,21 @@ struct HomeView: View {
                 .tabItem {
                     Image(systemName: "house")
                 }
-            CalendarView()
+            CalendarView(vm: LessonListViewModel(context: viewContext))
                 .tabItem {
                     Image(systemName: "calendar")
                 }
                 .environmentObject(dateHolder)
+                .environment(\.managedObjectContext, viewContext)
             
-            ClassroomView()
+            ClassroomView(studentVM: StudentListViewModel(context: viewContext))
                 .environment(\.managedObjectContext, viewContext)
                 .tabItem {
                     Image(systemName: "studentdesk")
                 }
-            NavigationView {
-                NavigationLink("Navigate") {
-                    
-                }
-            }
+            ProfileView()
                 .tabItem {
-                    Image(systemName: "person.crop.circle")
+                Image(systemName: "person.crop.circle")
                 }
         }
     }

@@ -1,8 +1,8 @@
 //
 //  Student+CoreDataClass.swift
-//  Tutu
+//  
 //
-//  Created by 진승연 on 2022/09/17.
+//  Created by 진승연 on 2022/09/28.
 //
 //
 

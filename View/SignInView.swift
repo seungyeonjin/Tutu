@@ -11,18 +11,33 @@ struct SignInView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                TextField("Email Address", text: $email)
-                    .disableAutocorrection(true)
-                    .autocapitalization(.none)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    
-                SecureField("Email Address", text: $password)
-                    .disableAutocorrection(true)
-                    .autocapitalization(.none)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
+            VStack(spacing: 15) {
+                ZStack {
+                    TextField("Email Address", text: $email)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
+                        .padding()
+                        .background(Color.white.opacity(0))
+                        .overlay(RoundedRectangle(cornerRadius: 2)
+                            .strokeBorder(viewModel.wrongEmail ? Color.red : Color.black, lineWidth: 1))
+                }
+                
+                ZStack {
+                    SecureField("Password", text: $password)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
+                        .padding()
+                        .background(Color.white.opacity(0))
+                        .overlay(RoundedRectangle(cornerRadius: 2)
+                            .strokeBorder(viewModel.wrongPassword ? Color.red : Color.black, lineWidth: 1))
+                }
+                
+                if viewModel.wrongEmail || viewModel.wrongPassword {
+                    Text("Wrong input. Please try again.")
+                        .foregroundColor(Color.red)
+                        .font(.caption)
+                }
+                
                 
                 Button(action: {
                     
@@ -33,20 +48,43 @@ struct SignInView: View {
                     viewModel.signIn(email: email, password: password)
                     
                 }, label: {
-                    Text("Sign In")
-                        .foregroundColor(Color.white)
-                        .frame(width: 200, height: 50)
-                        .cornerRadius(8)
-                        .background(Color.blue)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color.gray, strokeColor: Color.black)
+                        Text("Sign In")
+                            .font(.myCustomFont(size: 18))
+                            .foregroundColor(Color.white)
+                    }
+                    .frame(width: 200, height: 50)
                 })
                 
-                NavigationLink("Create Account", destination: SignUpView())
-                    .padding()
+                Spacer(minLength:70)
+                
+                VStack {
+                    Text("New to Tutu?")
+                        .font(.myCustomFont(size: 14))
+                    NavigationLink(destination: SignUpView(), label: {
+                        Text("Create Account")
+                            .font(.myCustomFont(size: 14))
+                            .foregroundColor(Color.black)
+                            .frame(width: 150, height:35)
+                            .overlay(RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.gray.opacity(0), strokeColor: Color.black))
+                    })
+                }
+                .padding()
                 Spacer()
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Sign In")
+                        .font(.myCustomFont(size: 20))
+                }
+            }
             .padding()
-            .navigationTitle("Sign In")
         }
+        .accentColor(Color.black)
     }
 }
 

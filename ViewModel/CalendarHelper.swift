@@ -5,6 +5,11 @@ class CalendarHelper {
     var calendar = Calendar.current
     let dateFormatter = DateFormatter()
     
+    func dayMonthYearString(_ date: Date) -> String {
+        dateFormatter.dateFormat = "DD.MM.yyyy"
+        return dateFormatter.string(from: date)
+    }
+    
     func monthYearString(_ date: Date) -> String {
         dateFormatter.dateFormat = "MM.yyyy"
         return dateFormatter.string(from: date)
