@@ -2,7 +2,7 @@
 //  Student+CoreDataProperties.swift
 //  
 //
-//  Created by 진승연 on 2022/09/28.
+//  Created by 진승연 on 2022/10/01.
 //
 //
 
@@ -21,6 +21,7 @@ extension Student {
     @NSManaged public var location: String?
     @NSManaged public var name: String?
     @NSManaged public var timestamp: Date?
+    @NSManaged public var contact: String?
     @NSManaged public var lessons: NSSet?
 
 }

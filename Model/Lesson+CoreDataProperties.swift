@@ -2,7 +2,7 @@
 //  Lesson+CoreDataProperties.swift
 //  
 //
-//  Created by 진승연 on 2022/09/28.
+//  Created by 진승연 on 2022/10/01.
 //
 //
 
@@ -18,7 +18,6 @@ extension Lesson {
 
     @NSManaged public var color: NSObject?
     @NSManaged public var content: String?
-    @NSManaged public var done: Bool
     @NSManaged public var endDate: Date?
     @NSManaged public var id: UUID?
     @NSManaged public var location: String?

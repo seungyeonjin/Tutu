@@ -1,25 +1,25 @@
 import SwiftUI
 
-struct AddStudentView: View {
+struct EditStudentView: View {
     
-    
-    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.managedObjectContext) var viewContext
     @Environment(\.dismiss) var dismiss
     
-    @State var studentName: String = ""
-    @State var location: String = ""
-    @State var contact: String = ""
+    var studentID: UUID
+    @State var studentName: String
+    @State var location: String
+    @State var studentColor: Color
+    @State var contact: String
     
-    @State var studentColor = Color.red
     @ObservedObject var studentVM: StudentListViewModel
     
     
-    private func addStudent() -> Bool {
+    private func editStudent() -> Bool {
         if (studentName.isEmpty || location.isEmpty) {
             return false
         }
         
-        studentVM.addStudent(timestamp: Date(), name: studentName, color: studentColor, location: location, contact: contact)
+        studentVM.editStudent(studentID: studentID, name: studentName, color: studentColor, location: location, contact: contact, context: viewContext)
         
         return true
     }
@@ -37,7 +37,7 @@ struct AddStudentView: View {
                     .padding()
                     .overlay(RoundedRectangle(cornerRadius: 4)
                         .fill(Color.white.opacity(0), strokeColor: Color.black))
-                TextField("Contact", text: $contact)
+                TextField("Contact", text: $location)
                     .disableAutocorrection(true)
                     .padding()
                     .overlay(RoundedRectangle(cornerRadius: 4)
@@ -46,7 +46,7 @@ struct AddStudentView: View {
                 Spacer()
             }
             .padding()
-            .navigationTitle("Add New Student")
+            .navigationTitle("Edit Student Info")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button() {
@@ -58,7 +58,7 @@ struct AddStudentView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button() {
-                        if addStudent() {
+                        if editStudent() {
                             dismiss()
                         }
                     } label: {
@@ -70,15 +70,3 @@ struct AddStudentView: View {
         }
     }
 }
-    /*
-    
-    init() {
-        tempStartDate = Date()
-        tempEndDate = Calendar.current.date(byAdding: .hour, value: 1, to: tempStartDate)!
-        
-        _lessonTitle = State(initialValue: "")
-        _startLessonDate = State(initialValue: tempStartDate)
-        _endLessonDate = State(initialValue: tempEndDate)
-    }
-     */
-

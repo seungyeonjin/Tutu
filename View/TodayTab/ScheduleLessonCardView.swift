@@ -3,7 +3,15 @@ import SwiftUI
 struct ScheduleLessonCardView: View {
     
     // var isFinished = false
-    var lesson: LessonViewModel
+    @ObservedObject var lessonVM: LessonListViewModel
+    let lessonID: UUID
+    let lesson: LessonViewModel
+    
+    init(lessonVM: LessonListViewModel, lessonID: UUID) {
+        self.lessonVM = lessonVM
+        self.lessonID = lessonID
+        lesson = lessonVM.lessonOfId(lessonID: lessonID)
+    }
     
     var body: some View {
         ZStack {
@@ -14,6 +22,7 @@ struct ScheduleLessonCardView: View {
             }
         }
         .border(.black)
+        .padding()
         
     }
     

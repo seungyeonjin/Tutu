@@ -2,29 +2,34 @@ import SwiftUI
 
 struct StudentItemView: View {
     
-    let student: StudentViewModel
+    @ObservedObject var studentVM: StudentListViewModel
+    var studentName: String
+    var studentColor: Color
+    var studentLocation: String
     
     var body: some View {
-        HStack(alignment: .center, spacing: 20) {
+        HStack() {
             ZStack {
                 Image(systemName: "person.fill")
                     .font(.system(size: 55, weight: .thin))
-                    .foregroundColor(student.color)
+                    .foregroundColor(studentColor)
                 Image(systemName: "person")
                     .font(.system(size: 55, weight: .ultraLight))
             }
             
             VStack(alignment: .leading, spacing: 8) {
-                Text(student.name)
+                Text(studentName)
                     .font(.myCustomFont(size: 18))
                     .fontWeight(.heavy)
                 
-                Text(student.location)
+                Text(studentLocation)
                     .font(.footnote)
                     .multilineTextAlignment(.leading)
                     .lineLimit(1)
                     .padding(.trailing, 8)
             } //: VSTACK
+            
+            Spacer()
         } //: HSTACK
     }
 }

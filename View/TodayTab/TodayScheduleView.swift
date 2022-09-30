@@ -4,6 +4,7 @@ struct TodayScheduleView: View {
     
     // FETCHING DATA
     @Environment(\.managedObjectContext) private var viewContext
+    @ObservedObject var vm: LessonListViewModel
     
     var cal = CalendarHelper()
     var date = Date()
@@ -30,7 +31,9 @@ struct TodayScheduleView: View {
         NavigationView {
             VStack {
                 Text("\(dateString)")
-                LessonListView(year: year, month: month, day: day, vm: LessonListViewModel(context: viewContext))
+                    .font(.myCustomFont(size: 18))
+                LessonListView(year: year, month: month, day: day, vm: vm)
+                    .padding()
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -41,12 +44,5 @@ struct TodayScheduleView: View {
                 }
             }
         }
-    }
-}
-
-struct TodayScheduleView_Previews: PreviewProvider {
-    static let dateHolder = DateHolder()
-    static var previews: some View {
-        TodayScheduleView()
     }
 }

@@ -5,8 +5,18 @@ class CalendarHelper {
     var calendar = Calendar.current
     let dateFormatter = DateFormatter()
     
+    func hm(_ date: Date) -> String {
+        dateFormatter.dateFormat = "HH:mm"
+        return dateFormatter.string(from: date)
+    }
+    
+    func hms(_ date: Date) -> String {
+        dateFormatter.dateFormat = "HH:mm:ss"
+        return dateFormatter.string(from: date)
+    }
+    
     func dayMonthYearString(_ date: Date) -> String {
-        dateFormatter.dateFormat = "DD.MM.yyyy"
+        dateFormatter.dateFormat = "LLLL dd, yyyy"
         return dateFormatter.string(from: date)
     }
     

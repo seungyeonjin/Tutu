@@ -6,24 +6,62 @@ struct DayView: View {
     let month: Int
     let day: Int
     
+    @State var isShowingEditSheet = false
+    
     @ObservedObject var vm: LessonListViewModel
+    var dayLessons: [LessonViewModel]
+    
+    let cal = CalendarHelper()
+    
+    init(year: Int, month: Int, day: Int, vm: LessonListViewModel) {
+        self.year = year
+        self.month = month
+        self.day = day
+        self.vm = vm
+        self.dayLessons = vm.lessonsOnDate(year: year, month: month, day: day) 
+    }
     
     var body: some View {
+        let date = Date.from(year:year, month: month, day: day)!
+        let dateString = cal.dayMonthYearString(date)
         NavigationView {
-            VStack {
-                ForEach(vm.lessonsOnDate(year: year, month: month, day: day), id: \.id) { lesson in
+            VStack(alignment: .leading) {
+                ScrollView {
                     ZStack {
-                        Text("\(lesson.title)")
-                            .lineLimit(1)
-                            .font(.caption2)
-                            .padding(2)
-                            .frame(alignment: .leading)
-                            .background(lesson.color)
-                            .overlay(RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color.black, lineWidth: 1))
+                        ForEach(0..<24) { d in
+                            Path() { path in
+                                path.move(to: CGPoint(x: 0, y: 25*d))
+                                path.addLine(to: CGPoint(x: 500, y: 25*d))
+                            }
+                            .stroke(.gray)
+                        }
+                        
+                        VStack {
+                            ForEach(dayLessons, id: \.id) { lesson in
+                                
+                                Button(action: {
+                                    isShowingEditSheet = true
+                                }, label: {
+                                    DayLessonCardView(lessonVM: vm, lessonID: lesson.id)
+                                })
+                                .sheet(isPresented: $isShowingEditSheet) {
+                                    EditLessonInfoView(lessonVM: vm, lessonID: lesson.id)
+                                }
+                            }
+                        }
                     }
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    VStack {
+                        Text(dateString).font(.myCustomFont(size: 20))
+                    }
+                }
+            }
+            
         }
     }
 }
+

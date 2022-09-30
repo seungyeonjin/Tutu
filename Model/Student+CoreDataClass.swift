@@ -2,7 +2,7 @@
 //  Student+CoreDataClass.swift
 //  
 //
-//  Created by 진승연 on 2022/09/28.
+//  Created by 진승연 on 2022/10/01.
 //
 //
 

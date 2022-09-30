@@ -12,18 +12,21 @@ struct InsetCalendarCellView: View {
     var day: Int
     @ObservedObject var lessonListVM: LessonListViewModel
     
+    var dayLessons: [LessonViewModel]
+    
     init(year: Int, month: Int, day: Int, vm: LessonListViewModel) {
         self.year = year
         self.month = month
         self.day = day
         self.lessonListVM = vm
+        self.dayLessons = vm.lessonsOnDate(year: year, month: month, day: day)
     }
     
     
     var body: some View {
         ScrollView(.vertical) {
             VStack(alignment: .leading, spacing: 2) {
-                ForEach(lessonListVM.lessonsOnDate(year: year, month: month, day: day), id: \.id) { lesson in
+                ForEach(dayLessons, id: \.id) { lesson in
                     ZStack {
                         Text("\(lesson.title)")
                             .lineLimit(1)

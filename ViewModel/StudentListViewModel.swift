@@ -30,9 +30,57 @@ class StudentListViewModel: NSObject, ObservableObject {
         } catch {
             print(error)
         }
+    
     }
     
-    func addStudent(timestamp: Date, name: String, color: Color, location: String) {
+    func fetchStudentLessons(studentID: UUID) -> [LessonViewModel]
+    {
+        let fetchRequest: NSFetchRequest<Student> = Student.fetchRequest()
+        fetchRequest.predicate = NSPredicate.init(format: "%K==%@", #keyPath(Student.id), studentID as NSUUID)
+        
+        var lessonList = [LessonViewModel]()
+        
+        do {
+            let student = try context.fetch(fetchRequest)
+            let lessons = student[0].lessons?.allObjects as! [Lesson]
+            lessonList = lessons.map(LessonViewModel.init)
+            
+        } catch  {
+        }
+        saveData()
+        return lessonList
+    }
+    
+    func fetchOneStudent(studentID: UUID) -> StudentViewModel {
+        
+        let fetchRequest: NSFetchRequest<Student> = Student.fetchRequest()
+        fetchRequest.predicate = NSPredicate.init(format: "%K==%@", #keyPath(Student.id), studentID as NSUUID)
+        
+        var student = [StudentViewModel]()
+        
+        do {
+            let studentsFetched = try context.fetch(fetchRequest)
+            student.append(StudentViewModel(student: studentsFetched[0]))
+            
+            
+        } catch  {
+        }
+        saveData()
+        return student[0]
+    }
+    
+    func updateStudents() {
+        
+        let fetchRequest: NSFetchRequest<Student> = Student.fetchRequest()
+        do {
+            let students = try context.fetch(fetchRequest)
+            self.students = students.map(StudentViewModel.init)
+        } catch {
+            
+        }
+    }
+    
+    func addStudent(timestamp: Date, name: String, color: Color, location: String, contact: String) {
         let newStudent = Student(context: context)
         
         newStudent.timestamp = timestamp
@@ -40,24 +88,65 @@ class StudentListViewModel: NSObject, ObservableObject {
         newStudent.name = name
         newStudent.color = UIColor(color)
         newStudent.location = location
+        newStudent.contact = contact
         
         saveData()
     }
     
-    func deleteStudent(id: UUID) {
+    func editStudent(studentID: UUID, name: String, color: Color, location: String, contact: String, context: NSManagedObjectContext) {
         
         let fetchRequest: NSFetchRequest<Student> = Student.fetchRequest()
-        fetchRequest.predicate = NSPredicate.init(format: "%K==%@", #keyPath(Student.id), id as NSUUID)
+        fetchRequest.predicate = NSPredicate.init(format: "%K==%@", #keyPath(Student.id), studentID as NSUUID)
         
-
         do {
             let students = try context.fetch(fetchRequest)
-            for student in students {
-                context.delete(student)
-            }
+            let student = students[0]
+            
+            
+            student.name = name
+            student.color = UIColor(color)
+            student.location = location
+            student.contact = contact
+            
+            for i in student.lessons?.allObjects as! [Lesson] {
+                i.color = UIColor(color)
+                i.location = location
+            } // 이 부분 없이는 lesson object까지 업데이트 안됨
+            // view에서 lesson.student.color 와 같이 코드 작성 대신 filter 사용해야 함
+            
             saveData()
         } catch  {
         }
+        
+    }
+    
+    func deleteStudentAndLessons(id: UUID) {
+        
+        let fetchRequest: NSFetchRequest<Lesson> = Lesson.fetchRequest()
+        fetchRequest.predicate = NSPredicate.init(format: "%K==%@", #keyPath(Lesson.student.id), id as NSUUID)
+        
+        do {
+            let lessons = try context.fetch(fetchRequest)
+            for lesson in lessons {
+                context.delete(lesson)
+            }
+            
+        } catch  {
+        }
+        
+        let fetchRequest2: NSFetchRequest<Student> = Student.fetchRequest()
+        fetchRequest2.predicate = NSPredicate.init(format: "%K==%@", #keyPath(Student.id), id as NSUUID)
+        
+
+        do {
+            let students = try context.fetch(fetchRequest2)
+            for student in students {
+                context.delete(student)
+            }
+            
+        } catch  {
+        }
+        saveData()
     }
     
     
@@ -90,28 +179,42 @@ struct StudentViewModel: Identifiable {
     }
     
     var id: UUID {
-        student.id!
+        student.id ?? UUID()
     }
     
     var name: String {
-        student.name!
+        student.name ?? ""
     }
     
     var color: Color {
-        Color(student.color as! UIColor)
+        if let color: UIColor = student.color as? UIColor {
+            return Color(color)
+        } else {
+            return .gray
+        }
     }
     
-    var lessons: [Lesson] {
+    var contact: String {
+        student.contact ?? ""
+    }
+    
+    var lessons: [LessonViewModel] {
         let set: NSSet = student.lessons ?? NSSet()
-        return set.allObjects as! [Lesson]
+        
+        let lessonArray = set.allObjects as! [Lesson]
+        var wrappedLessonArray: [LessonViewModel] = []
+        for lesson in lessonArray {
+            wrappedLessonArray.append(LessonViewModel(lesson: lesson))
+        }
+        return wrappedLessonArray
     }
     
     var timeStamp: Date {
-        student.timestamp!
+        student.timestamp ?? Date()
     }
     
     var location: String {
-        student.location!
+        student.location ?? ""
     }
     
     

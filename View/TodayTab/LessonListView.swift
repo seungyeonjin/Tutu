@@ -7,15 +7,25 @@ struct LessonListView: View {
     var day: Int
     
     @ObservedObject var vm: LessonListViewModel
+    var dayLessons: [LessonViewModel]
+    
+    init(year: Int, month: Int, day: Int, vm: LessonListViewModel) {
+        self.year = year
+        self.month = month
+        self.day = day
+        self.vm = vm
+        self.dayLessons = vm.lessonsOnDate(year: year, month: month, day: day)
+    }
     
     var body: some View {
         ScrollView {
             VStack {
-                ForEach(vm.lessonsOnDate(year: year, month: month, day: day), id: \.id) { lesson in
+                ForEach(dayLessons, id: \.id) { lesson in
                     VStack(alignment: .leading) {
                         HStack {
-                            Text("\(lesson.student.name)")
+                            Text("\(lesson.student?.name ?? "Unknown")")
                                 .font(.myCustomFont(size: 16))
+                                .padding(4)
                                 .cornerRadius(4)
                                 .border(.black)
                                 .background(lesson.color)
@@ -23,7 +33,7 @@ struct LessonListView: View {
                                 .font(.myCustomFont(size: 12))
                                 .foregroundColor(.gray)
                         }
-                        ScheduleLessonCardView(lesson: lesson)
+                        ScheduleLessonCardView(lessonVM: vm, lessonID: lesson.id)
                     }
                 }
             }

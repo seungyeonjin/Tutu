@@ -6,7 +6,6 @@
     <entity name="Lesson" representedClassName="Lesson" syncable="YES">
         <attribute name="color" optional="YES" attributeType="Transformable"/>
         <attribute name="content" optional="YES" attributeType="String"/>
-        <attribute name="done" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="location" optional="YES" attributeType="String"/>
@@ -16,6 +15,7 @@
     </entity>
     <entity name="Student" representedClassName="Student" syncable="YES">
         <attribute name="color" optional="YES" attributeType="Transformable"/>
+        <attribute name="contact" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="location" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -24,7 +24,7 @@
     </entity>
     <elements>
         <element name="DaySchedule" positionX="-54" positionY="27" width="128" height="44"/>
-        <element name="Lesson" positionX="-63" positionY="-18" width="128" height="164"/>
-        <element name="Student" positionX="-36" positionY="36" width="128" height="119"/>
+        <element name="Lesson" positionX="-63" positionY="-18" width="128" height="149"/>
+        <element name="Student" positionX="-36" positionY="36" width="128" height="134"/>
     </elements>
 </model>

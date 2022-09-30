@@ -23,19 +23,25 @@ struct AddLessonView: View {
             VStack(alignment: .leading, spacing: 20) {
                 Text("Student:")
                     .font(.myCustomFont(size: 16))
-                HStack {
-                    ForEach(studentVM.students, id: \.id) { student in
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(selectedStudentID == student.id ? student.color : Color(.systemGray6), strokeColor: selectedStudentID == student.id ? .black : .gray)
-                            .frame(maxWidth: 70, maxHeight: 30)
-                            .overlay( Button(action: {
-                                selectedStudentID = student.id
-                        } , label: {
-                            Text("\(student.name)")
-                                .foregroundColor(selectedStudentID == student.id ? .black : .gray)
-                                .padding()
-                        }))
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(studentVM.students, id: \.id) { student in
+                            Button(action: {
+                                    selectedStudentID = student.id
+                            } , label: {
+                                ZStack {
+                                    Text("\(student.name)")
+                                        .padding(5)
+                                        .cornerRadius(4)
+                                        .background(selectedStudentID == student.id ? student.color : Color(.systemGray6))
+                                        .foregroundColor(selectedStudentID == student.id ? .black : .gray)
+                                    RoundedRectangle(cornerRadius: 4).stroke(selectedStudentID == student.id ? .black : .gray)
+                                }
+                            })
+                        }
+                        Spacer()
                     }
+                    .padding(2)
                 }
                 VStack(alignment: .leading) {
                     Spacer(minLength: 10)
@@ -113,7 +119,7 @@ struct AddLessonView: View {
     
     func createLesson() {
         
-        lessonListVM.addLesson(startLessonDate: startLessonDate, endLessonDate: endLessonDate, lessonTitle: lessonTitle, selectedStudentID: selectedStudentID!)
+        lessonListVM.addLesson(startLessonDate: startLessonDate, endLessonDate: endLessonDate, lessonTitle: lessonTitle, lessonContent: content, selectedStudentID: selectedStudentID!)
         
     }
 }
