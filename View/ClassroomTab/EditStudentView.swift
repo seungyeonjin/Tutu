@@ -37,7 +37,7 @@ struct EditStudentView: View {
                     .padding()
                     .overlay(RoundedRectangle(cornerRadius: 4)
                         .fill(Color.white.opacity(0), strokeColor: Color.black))
-                TextField("Contact", text: $location)
+                TextField("Contact", text: $contact)
                     .disableAutocorrection(true)
                     .padding()
                     .overlay(RoundedRectangle(cornerRadius: 4)

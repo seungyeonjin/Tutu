@@ -5,24 +5,19 @@ struct ScheduleLessonCardView: View {
     // var isFinished = false
     @ObservedObject var lessonVM: LessonListViewModel
     let lessonID: UUID
-    let lesson: LessonViewModel
-    
-    init(lessonVM: LessonListViewModel, lessonID: UUID) {
-        self.lessonVM = lessonVM
-        self.lessonID = lessonID
-        lesson = lessonVM.lessonOfId(lessonID: lessonID)
-    }
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 4)
-                .fill(lesson.color, strokeColor: Color.black)
-            VStack(alignment: .leading) {
-                Text("\(lesson.content)")
+            if let lesson = lessonVM.lessonOfId(lessonID: lessonID) {
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(lesson.color, strokeColor: Color.black)
+                VStack(alignment: .leading) {
+                    Text("\(lesson.content)")
+                }
             }
+            else { Text("") }
         }
         .border(.black)
-        .padding()
         
     }
     

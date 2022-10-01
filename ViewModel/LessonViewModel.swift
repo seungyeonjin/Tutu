@@ -129,20 +129,22 @@ class LessonListViewModel: NSObject, ObservableObject {
         }
     }
     
-    func lessonOfId(lessonID: UUID) -> LessonViewModel {
+    func lessonOfId(lessonID: UUID) -> LessonViewModel? {
         let fetchRequest: NSFetchRequest<Lesson> = Lesson.fetchRequest()
         fetchRequest.predicate = NSPredicate.init(format: "%K==%@", #keyPath(Lesson.id), lessonID as NSUUID)
 
-        var lessonOfId: LessonViewModel? = nil
+        let firstLesson: LessonViewModel
         do {
             let lesson = try context.fetch(fetchRequest)
-            lessonOfId = lesson.map(LessonViewModel.init)[0]
-            
+            if lesson.first != nil {
+                firstLesson = LessonViewModel(lesson: lesson.first!)
+                saveData()
+                return firstLesson
+            }
         } catch {
             
         }
-        
-        return lessonOfId!
+        return nil
     }
      
     
@@ -218,6 +220,23 @@ class LessonListViewModel: NSObject, ObservableObject {
             return
         }
         
+        
+        saveData()
+    }
+    
+    func deleteLesson(lessonID: UUID) {
+        let fetchRequest: NSFetchRequest<Lesson> = Lesson.fetchRequest()
+        fetchRequest.predicate = NSPredicate.init(format: "%K==%@", #keyPath(Lesson.id), lessonID as NSUUID)
+        
+        do {
+            let lessonList = try context.fetch(fetchRequest)
+            let lesson: Lesson = lessonList.first!
+            
+            context.delete(lesson)
+            
+        } catch {
+            
+        }
         
         saveData()
     }

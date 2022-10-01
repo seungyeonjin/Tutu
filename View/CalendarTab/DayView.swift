@@ -6,7 +6,7 @@ struct DayView: View {
     let month: Int
     let day: Int
     
-    @State var isShowingEditSheet = false
+    @State var isShowingLessonDetail: LessonViewModel? = nil
     
     @ObservedObject var vm: LessonListViewModel
     var dayLessons: [LessonViewModel]
@@ -40,13 +40,13 @@ struct DayView: View {
                             ForEach(dayLessons, id: \.id) { lesson in
                                 
                                 Button(action: {
-                                    isShowingEditSheet = true
+                                    isShowingLessonDetail = lesson
                                 }, label: {
                                     DayLessonCardView(lessonVM: vm, lessonID: lesson.id)
                                 })
-                                .sheet(isPresented: $isShowingEditSheet) {
-                                    EditLessonInfoView(lessonVM: vm, lessonID: lesson.id)
-                                }
+                            }
+                            .sheet(item: $isShowingLessonDetail) { lesson in
+                                LessonDetailView(lessonVM: vm, lessonID: lesson.id)
                             }
                         }
                     }

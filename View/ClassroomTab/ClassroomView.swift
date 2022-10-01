@@ -20,8 +20,8 @@ struct ClassroomView: View {
                         } label: {
                             StudentItemView(studentVM: studentVM, studentName: student.name, studentColor: student.color, studentLocation: student.location)
                                 .foregroundColor(.black)
-                                .padding()
-                                .border(.black)
+                                .overlay(RoundedRectangle(cornerRadius: 4)
+                                    .stroke(.black, lineWidth: 1))
                         }
                     }
                 }

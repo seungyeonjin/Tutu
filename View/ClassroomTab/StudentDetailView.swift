@@ -71,7 +71,6 @@ struct StudentDetailView: View {
                                 .font(.myCustomFont(size: 16))
                                 .padding(2)
                                 .overlay(RoundedRectangle(cornerRadius: 4).stroke(.black))
-                            // alert - are you sure you want to remove?
                         })
                         .alert(isPresented: $isShowingRemoveAlert) {
                             Alert(title: Text("Are you sure?"),

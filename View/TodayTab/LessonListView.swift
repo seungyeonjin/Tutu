@@ -9,6 +9,8 @@ struct LessonListView: View {
     @ObservedObject var vm: LessonListViewModel
     var dayLessons: [LessonViewModel]
     
+    @State var isShowingLessonDetail: LessonViewModel? = nil
+    
     init(year: Int, month: Int, day: Int, vm: LessonListViewModel) {
         self.year = year
         self.month = month
@@ -27,14 +29,25 @@ struct LessonListView: View {
                                 .font(.myCustomFont(size: 16))
                                 .padding(4)
                                 .cornerRadius(4)
-                                .border(.black)
                                 .background(lesson.color)
+                                .overlay(RoundedRectangle(cornerRadius: 4)
+                                    .stroke(.black, lineWidth: 1))
+                                .padding(2)
+                            
                             Text("\(lesson.title)")
                                 .font(.myCustomFont(size: 12))
                                 .foregroundColor(.gray)
                         }
-                        ScheduleLessonCardView(lessonVM: vm, lessonID: lesson.id)
+                        Button(action: {
+                            isShowingLessonDetail = lesson
+                        }, label: {
+                            ScheduleLessonCardView(lessonVM: vm, lessonID: lesson.id)
+                                .foregroundColor(.black)
+                        })
                     }
+                }
+                .sheet(item: $isShowingLessonDetail) { lesson in
+                    LessonDetailView(lessonVM: vm, lessonID: lesson.id)
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
