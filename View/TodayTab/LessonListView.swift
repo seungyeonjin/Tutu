@@ -8,6 +8,7 @@ struct LessonListView: View {
     
     @ObservedObject var vm: LessonListViewModel
     var dayLessons: [LessonViewModel]
+    var cal = CalendarHelper()
     
     @State var isShowingLessonDetail: LessonViewModel? = nil
     
@@ -24,6 +25,11 @@ struct LessonListView: View {
             VStack {
                 ForEach(dayLessons, id: \.id) { lesson in
                     VStack(alignment: .leading) {
+                        let startString = cal.hm(lesson.startDate)
+                        let endString = cal.hm(lesson.endDate)
+                        Text("\(startString) ~ \(endString)")
+                            .font(.myCustomFont(size: 14))
+                            .foregroundColor(Color(UIColor.darkGray))
                         HStack {
                             Text("\(lesson.student?.name ?? "Unknown")")
                                 .font(.myCustomFont(size: 16))
@@ -34,9 +40,6 @@ struct LessonListView: View {
                                     .stroke(.black, lineWidth: 1))
                                 .padding(2)
                             
-                            Text("\(lesson.title)")
-                                .font(.myCustomFont(size: 12))
-                                .foregroundColor(.gray)
                         }
                         Button(action: {
                             isShowingLessonDetail = lesson

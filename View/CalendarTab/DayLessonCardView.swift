@@ -30,7 +30,7 @@ struct DayLessonCardView: View {
                         .foregroundColor(.black)
                         .padding(2)
                         .frame(alignment: .leading)
-                    Text(lesson.content)
+                    Text(lesson.memo)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(.black)

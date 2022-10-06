@@ -1,103 +1,30 @@
 import Foundation
 import SwiftUI
 import CoreData
-/*
-class LessonViewModel: ObservableObject {
-    
-    let viewContext = PersistenceController.shared.container.viewContext
-    
-    var year: Int
-    var month: Int
-    var day: Int
 
-    @Published var dayLessons = [Lesson]()
-    
-    init() {
-        let calendarDate = Calendar.current.dateComponents([.day, .year, .month], from: Date())
-        year = calendarDate.year!
-        month = calendarDate.month!
-        day = calendarDate.day!
-
-    }
-    
-    init(year: Int, month: Int, day: Int) {
-        self.year = year
-        self.month = month
-        self.day = day
-        
-        fetchDayLessons()
-    }
-    
-    func fetchDayLessons(startDate: Date) -> [Lesson] {
-        
-        let startOfDate = startDate
-        let endOfDate = Calendar.current.date(byAdding: .day, value: 1, to: startOfDate)!
-        
-        let startPredicate1 = NSPredicate(format: "startDate >= %@", startOfDate as NSDate)
-        let startPredicate2 = NSPredicate(format: "startDate < %@", endOfDate as NSDate)
-        let startPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [startPredicate1, startPredicate2])
-        
-        let endPredicate1 = NSPredicate(format: "endDate >= %@", startOfDate as NSDate)
-        let endPredicate2 = NSPredicate(format: "endDate < %@", endOfDate as NSDate)
-        let endPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [endPredicate1, endPredicate2])
-        
-        let datePredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [startPredicate, endPredicate])
-        
-        
-        
-    }
-    
-    func fetchDayLessons() {
-        
-        let startOfDate = Date.from(year: year, month: month, day: day)!
-        let endOfDate = Calendar.current.date(byAdding: .day, value: 1, to: startOfDate)!
-        
-        let startPredicate1 = NSPredicate(format: "startDate >= %@", startOfDate as NSDate)
-        let startPredicate2 = NSPredicate(format: "startDate < %@", endOfDate as NSDate)
-        let startPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [startPredicate1, startPredicate2])
-        
-        let endPredicate1 = NSPredicate(format: "endDate >= %@", startOfDate as NSDate)
-        let endPredicate2 = NSPredicate(format: "endDate < %@", endOfDate as NSDate)
-        let endPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [endPredicate1, endPredicate2])
-        
-        let datePredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [startPredicate, endPredicate])
-        
-        
-        let request: NSFetchRequest<Lesson> = Lesson.fetchRequest()
-        request.predicate = datePredicate
-        do {
-            dayLessons = try viewContext.fetch(request)
-        } catch {
-            print("ERROR FETCHING CORE DATA")
-            print(error.localizedDescription)
-        }
-    }
-    
-    
-    
-    func deleteLesson(indexSet: IndexSet) {
-        guard let index = indexSet.first else { return }
-        let lesson = dayLessons[index]
-        viewContext.delete(lesson)
-        saveData()
-    }
-    
-    
-}
-*/
 
 @MainActor
 class LessonListViewModel: NSObject, ObservableObject {
     
     @Published var lessons = [LessonViewModel]()
-    // @Published var dayLessons = [LessonViewModel]()
-    
-    private let fetchedResultsController: NSFetchedResultsController<Lesson>
+    @Published var todos = [ToDoItemViewModel]()
     
     private (set) var context: NSManagedObjectContext
-    
+    private let fetchedResultsController: NSFetchedResultsController<Lesson>
+
     init(context: NSManagedObjectContext) {
+        
         self.context = context
+        
+        let requestTodo: NSFetchRequest<ToDo> = ToDo.fetchRequest()
+        
+        do {
+            let todoList = try context.fetch(requestTodo)
+            self.todos = todoList.map(ToDoItemViewModel.init)
+        } catch {
+            
+        }
+        
         
         let request: NSFetchRequest<Lesson> = Lesson.fetchRequest()
         request.sortDescriptors = []
@@ -117,6 +44,80 @@ class LessonListViewModel: NSObject, ObservableObject {
             print(error)
         }
     }
+    
+    func createToDo(name: String, lesson: Lesson) {
+        let newTodo = ToDo(context: context)
+        
+        newTodo.done = false
+        newTodo.name = name
+        newTodo.id = UUID()
+        newTodo.inLesson = lesson
+        
+        saveData()
+    }
+    
+    func todoDone(_ todoId: UUID) {
+        
+        let fetchRequest: NSFetchRequest<ToDo> = ToDo.fetchRequest()
+        fetchRequest.predicate = NSPredicate.init(format: "%K==%@", #keyPath(ToDo.id), todoId as NSUUID)
+
+        do {
+            let todo = try context.fetch(fetchRequest)
+            if todo.first != nil {
+                todo.first!.done = true
+                updateTodoList()
+                saveData()
+            }
+        } catch {
+            
+        }
+    }
+    
+    func todoUndo(_ todoId: UUID) {
+        let fetchRequest: NSFetchRequest<ToDo> = ToDo.fetchRequest()
+        fetchRequest.predicate = NSPredicate.init(format: "%K==%@", #keyPath(ToDo.id), todoId as NSUUID)
+
+        do {
+            let todo = try context.fetch(fetchRequest)
+            if todo.first != nil {
+                todo.first!.done = false
+                updateTodoList()
+                saveData()
+            }
+        } catch {
+            
+        }
+    }
+    
+    func fetchTodoList(_ lessonId: UUID) -> [ToDoItemViewModel] {
+        let fetchRequest: NSFetchRequest<Lesson> = Lesson.fetchRequest()
+        fetchRequest.predicate = NSPredicate.init(format: "%K==%@", #keyPath(Lesson.id), lessonId as NSUUID)
+
+        do {
+            let lesson = try context.fetch(fetchRequest)
+            if lesson.first != nil {
+                let todoList = lesson.first!.todos?.allObjects as! [ToDo]
+                let lessonTodo = todoList.map(ToDoItemViewModel.init)
+                return lessonTodo
+            }
+        } catch {
+            
+        }
+        return []
+    }
+    
+    
+    func updateTodoList() {
+        objectWillChange.send()
+        let request: NSFetchRequest<ToDo> = ToDo.fetchRequest()
+        do {
+            let todos = try context.fetch(request)
+            self.todos = todos.map(ToDoItemViewModel.init)
+        } catch {
+            
+        }
+    }
+    
     
     func update() {
         objectWillChange.send()
@@ -178,7 +179,7 @@ class LessonListViewModel: NSObject, ObservableObject {
         return dayLessons
     }
     
-    func addLesson(startLessonDate: Date, endLessonDate: Date, lessonTitle: String, lessonContent: String, selectedStudentID: UUID ) {
+    func addLesson(startLessonDate: Date, endLessonDate: Date, lessonTitle: String, lessonContent: String, selectedStudentID: UUID ) -> Lesson? {
         
         let fetchRequest: NSFetchRequest<Student> = Student.fetchRequest()
         fetchRequest.predicate = NSPredicate.init(format: "%K==%@", #keyPath(Student.id), selectedStudentID as NSUUID)
@@ -192,14 +193,15 @@ class LessonListViewModel: NSObject, ObservableObject {
             newLesson.id = UUID()
             newLesson.title = lessonTitle
             newLesson.student = students[0]
-            newLesson.content = lessonContent
+            newLesson.memo = lessonContent
             newLesson.color = students[0].color as! UIColor
             
+            saveData()
+            return newLesson
         } catch {
-            return
+            return nil
         }
         
-        saveData()
     }
     
     func editLesson(lessonID: UUID, startLessonDate: Date, endLessonDate: Date, lessonTitle: String, lessonContent: String, selectedStudentID: UUID) {
@@ -214,7 +216,7 @@ class LessonListViewModel: NSObject, ObservableObject {
             lesson.startDate = startLessonDate
             lesson.endDate = endLessonDate
             lesson.title = lessonTitle
-            lesson.content = lessonContent
+            lesson.memo = lessonContent
             
         } catch {
             return
@@ -231,6 +233,10 @@ class LessonListViewModel: NSObject, ObservableObject {
         do {
             let lessonList = try context.fetch(fetchRequest)
             let lesson: Lesson = lessonList.first!
+            
+            for todo in lesson.todos!.allObjects as! [ToDo] {
+                context.delete(todo)
+            }
             
             context.delete(lesson)
             
@@ -285,8 +291,8 @@ struct LessonViewModel: Identifiable {
         }
     }
     
-    var content: String {
-        lesson.content ?? ""
+    var memo: String {
+        lesson.memo ?? ""
     }
     var endDate: Date {
         lesson.endDate ?? Date()
@@ -305,5 +311,15 @@ struct LessonViewModel: Identifiable {
         } else {
             return nil
         }
+    }
+    
+    var todos: [ToDoItemViewModel] {
+        let set: NSSet = lesson.todos ?? NSSet()
+        let todoArray = set.allObjects as! [ToDo]
+        var wrappedTodoArray: [ToDoItemViewModel] = []
+        for todo in todoArray {
+            wrappedTodoArray.append(ToDoItemViewModel(todoItem: todo))
+        }
+        return wrappedTodoArray
     }
 }

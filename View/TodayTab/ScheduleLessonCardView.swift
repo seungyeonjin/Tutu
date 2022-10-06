@@ -12,8 +12,15 @@ struct ScheduleLessonCardView: View {
                 RoundedRectangle(cornerRadius: 4)
                     .fill(lesson.color, strokeColor: Color.black)
                 VStack(alignment: .leading) {
-                    Text("\(lesson.content)")
+                    Text(lesson.title)
+                        .font(.myCustomFont(size: 15))
+                    Text("\(lesson.memo)")
+                        .font(.myCustomFont(size: 13))
+                    HStack() {
+                        Spacer()
+                    }
                 }
+                .padding()
             }
             else { Text("") }
         }
@@ -22,13 +29,3 @@ struct ScheduleLessonCardView: View {
     }
     
 }
-
-/*
-struct ScheduleLessonCardView_Previews: PreviewProvider {
-    static var previews: some View {
-        ScheduleLessonCardView(isFinished: true)
-            .previewLayout(.sizeThatFits)
-            .padding()
-    }
-}
-*/

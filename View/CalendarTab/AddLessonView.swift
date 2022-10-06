@@ -8,7 +8,9 @@ struct AddLessonView: View {
     @State var startLessonDate: Date
     @State var endLessonDate: Date
     @State var selectedStudentID: UUID?
-    @State var content: String = ""
+    @State var memo: String = ""
+    @State var lessonPlans: [String] = []
+    @State var newPlan: String = ""
     
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -20,86 +22,118 @@ struct AddLessonView: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("Student:")
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("Student:")
+                        .font(.myCustomFont(size: 16))
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(studentVM.students, id: \.id) { student in
+                                Button(action: {
+                                        selectedStudentID = student.id
+                                } , label: {
+                                    ZStack {
+                                        Text("\(student.name)")
+                                            .padding(5)
+                                            .cornerRadius(4)
+                                            .background(selectedStudentID == student.id ? student.color : Color(.systemGray6))
+                                            .foregroundColor(selectedStudentID == student.id ? .black : .gray)
+                                        RoundedRectangle(cornerRadius: 4).stroke(selectedStudentID == student.id ? .black : .gray)
+                                    }
+                                })
+                            }
+                            Spacer()
+                        }
+                        .padding(2)
+                    }
+                    VStack(alignment: .leading) {
+                        Spacer(minLength: 10)
+                        Text("Lesson Title: ")
+                            .font(.myCustomFont(size: 16))
+                        TextField("Untitled", text: $lessonTitle)
+                            .font(.myCustomFont(size: 16))
+                            .padding()
+                            .cornerRadius(10)
+                            .overlay(RoundedRectangle(cornerRadius: 4)
+                                .fill(.black.opacity(0), strokeColor: .black))
+                    }
+                    VStack(alignment: .leading) {
+                        Spacer(minLength: 10)
+                        Text("Time: ")
+                        DatePicker("Start", selection: $startLessonDate,
+                            displayedComponents: [.date, .hourAndMinute])
+                                .onChange(of: startLessonDate) { newValue in
+                                    endLessonDate = Calendar.current.date(byAdding: .hour, value: 1, to: newValue)! }
+                        DatePicker("End", selection: $endLessonDate,
+                                                   displayedComponents: [.date, .hourAndMinute])
+                    }
                     .font(.myCustomFont(size: 16))
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(studentVM.students, id: \.id) { student in
+                    
+                    VStack(alignment: .leading) {
+                        Text("Lesson Plan: ")
+                            .font(.myCustomFont(size: 16))
+                        ForEach(lessonPlans, id: \.self) { plans in
+                            HStack {
+                                Image(systemName: "stop")
+                                Text(plans)
+                            }
+                        }
+                        HStack {
+                            TextField("Create lesson plan",  text: $newPlan)
+                                .font(.myCustomFont(size: 16))
+                                .padding()
+                                .cornerRadius(10)
+                                .overlay(RoundedRectangle(cornerRadius: 4)
+                                    .fill(.black.opacity(0), strokeColor: .black))
                             Button(action: {
-                                    selectedStudentID = student.id
-                            } , label: {
-                                ZStack {
-                                    Text("\(student.name)")
-                                        .padding(5)
-                                        .cornerRadius(4)
-                                        .background(selectedStudentID == student.id ? student.color : Color(.systemGray6))
-                                        .foregroundColor(selectedStudentID == student.id ? .black : .gray)
-                                    RoundedRectangle(cornerRadius: 4).stroke(selectedStudentID == student.id ? .black : .gray)
-                                }
+                                if newPlan.isEmpty { return }
+                                lessonPlans.append(newPlan)
+                                newPlan = ""
+                            }, label : {
+                                Image(systemName: "plus.square")
+                                    .font(.system(size: 16))
+                                    
                             })
+                            
                         }
-                        Spacer()
                     }
-                    .padding(2)
-                }
-                VStack(alignment: .leading) {
-                    Spacer(minLength: 10)
-                    Text("Lesson Title: ")
-                        .font(.myCustomFont(size: 16))
-                    TextField("Untitled", text: $lessonTitle)
-                        .font(.myCustomFont(size: 16))
-                        .padding()
-                        .cornerRadius(10)
-                        .overlay(RoundedRectangle(cornerRadius: 4)
-                            .fill(.black.opacity(0), strokeColor: .black))
-                }
-                VStack(alignment: .leading) {
-                    Spacer(minLength: 10)
-                    Text("Time: ")
-                    DatePicker("Start", selection: $startLessonDate,
-                        displayedComponents: [.date, .hourAndMinute])
-                            .onChange(of: startLessonDate) { newValue in
-                                endLessonDate = Calendar.current.date(byAdding: .hour, value: 1, to: newValue)! }
-                    DatePicker("End", selection: $endLessonDate,
-                                               displayedComponents: [.date, .hourAndMinute])
-                }
-                .font(.myCustomFont(size: 16))
-                VStack(alignment: .leading) {
-                    Spacer(minLength: 10)
-                    Text("Content: ")
-                        .font(.myCustomFont(size: 16))
-                    ZStack {
-                        TextEditor(text: $content)
-                            .font(.custom("HelveticaNeue", size: 13))
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(.gray.opacity(0), strokeColor: .black)
-                    }
-                    .frame(height: 200)
-                }
-            }
-            .padding()
-            .navigationTitle("Add new lesson")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button() {
-                        dismiss()
-                    } label: {
-                        Text("Cancel")
-                            .foregroundColor(Color.black)
+                    
+                    VStack(alignment: .leading) {
+                        Spacer(minLength: 10)
+                        Text("Memo: ")
+                            .font(.myCustomFont(size: 16))
+                        ZStack {
+                            TextEditor(text: $memo)
+                                .font(.custom("HelveticaNeue", size: 13))
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(.gray.opacity(0), strokeColor: .black)
+                        }
+                        .frame(height: 200)
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button() {
-                        if lessonTitle.isEmpty || selectedStudentID != nil {
-                            createLesson()
+                .padding()
+                .navigationTitle("Add new lesson")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button() {
                             dismiss()
+                        } label: {
+                            Text("Cancel")
+                                .foregroundColor(Color.black)
                         }
-                    } label: {
-                        Image(systemName: "checkmark.rectangle")
-                            .foregroundColor(lessonTitle.isEmpty || selectedStudentID == nil ? Color.gray : Color.black)
                     }
-                }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button() {
+                            if lessonTitle.isEmpty || selectedStudentID != nil {
+                                createLesson()
+                                dismiss()
+                            }
+                        } label: {
+                            Image(systemName: "checkmark.rectangle")
+                                .foregroundColor(lessonTitle.isEmpty || selectedStudentID == nil ? Color.gray : Color.black)
+                        }
+                    }
+            }
             }
         }
     }
@@ -119,7 +153,13 @@ struct AddLessonView: View {
     
     func createLesson() {
         
-        lessonListVM.addLesson(startLessonDate: startLessonDate, endLessonDate: endLessonDate, lessonTitle: lessonTitle, lessonContent: content, selectedStudentID: selectedStudentID!)
+        let createdLesson = lessonListVM.addLesson(startLessonDate: startLessonDate, endLessonDate: endLessonDate, lessonTitle: lessonTitle, lessonContent: memo, selectedStudentID: selectedStudentID!)
+        
+        for item in lessonPlans {
+            lessonListVM.createToDo(name: item, lesson: createdLesson!)
+        }
+        
+        
         
     }
 }

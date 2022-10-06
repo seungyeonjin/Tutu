@@ -1,5 +1,5 @@
 //
-//  Lesson+CoreDataClass.swift
+//  ToDo+CoreDataClass.swift
 //  
 //
 //  Created by 진승연 on 2022/10/06.
@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-@objc(Lesson)
-public class Lesson: NSManagedObject {
+@objc(ToDo)
+public class ToDo: NSManagedObject {
 
 }

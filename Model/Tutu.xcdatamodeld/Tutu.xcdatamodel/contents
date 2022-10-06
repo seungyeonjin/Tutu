@@ -3,15 +3,18 @@
     <entity name="DaySchedule" representedClassName="DaySchedule" syncable="YES">
         <relationship name="lessons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Lesson"/>
     </entity>
+    <entity name="Entity" representedClassName="Entity" syncable="YES" codeGenerationType="class"/>
     <entity name="Lesson" representedClassName="Lesson" syncable="YES">
         <attribute name="color" optional="YES" attributeType="Transformable"/>
-        <attribute name="content" optional="YES" attributeType="String"/>
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="location" optional="YES" attributeType="String"/>
+        <attribute name="memo" optional="YES" attributeType="String"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="summary" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="student" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Student" inverseName="lessons" inverseEntity="Student"/>
+        <relationship name="todos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ToDo" inverseName="inLesson" inverseEntity="ToDo"/>
     </entity>
     <entity name="Student" representedClassName="Student" syncable="YES">
         <attribute name="color" optional="YES" attributeType="Transformable"/>
@@ -22,9 +25,17 @@
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="lessons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Lesson" inverseName="student" inverseEntity="Lesson"/>
     </entity>
+    <entity name="ToDo" representedClassName="ToDo" syncable="YES">
+        <attribute name="done" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="inLesson" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Lesson" inverseName="todos" inverseEntity="Lesson"/>
+    </entity>
     <elements>
         <element name="DaySchedule" positionX="-54" positionY="27" width="128" height="44"/>
-        <element name="Lesson" positionX="-63" positionY="-18" width="128" height="149"/>
+        <element name="Lesson" positionX="-63" positionY="-18" width="128" height="179"/>
         <element name="Student" positionX="-36" positionY="36" width="128" height="134"/>
+        <element name="ToDo" positionX="-54" positionY="72" width="128" height="89"/>
+        <element name="Entity" positionX="-36" positionY="81" width="128" height="29"/>
     </elements>
 </model>

@@ -54,5 +54,6 @@ struct ClassroomView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
