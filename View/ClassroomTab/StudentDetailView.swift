@@ -52,12 +52,20 @@ struct StudentDetailView: View {
             .padding([.leading, .trailing, .top])
             
             VStack(alignment: .leading) {
-                Text("@ \(student.location)")
-                Text("\(student.contact)")
+                HStack {
+                    Image(systemName: "house")
+                    Text("\(student.location)")
+                }
+                Spacer()
+                HStack {
+                    Image(systemName: "phone")
+                    Text("\(student.contact)")
+                }
                 Spacer()
                 VStack(alignment: .leading) {
                     Text("Lesson History")
                         .font(.myCustomFont(size: 16))
+                        .fontWeight(.bold)
                     ScrollView {
                         let studentLessons = student.lessons
                         let studentLessonsSorted = studentLessons.sorted(by: { $0.startDate > $1.startDate })
@@ -69,9 +77,12 @@ struct StudentDetailView: View {
                                     Text(CalendarHelper().dayMonthYearString(lesson.startDate))
                                         .foregroundColor(.gray)
                                         .lineLimit(1)
+                                        .font(.myCustomFont(size: 13))
+                                    
                                     Spacer()
                                     Text(lesson.title)
-                                    
+                                        .foregroundColor(.black)
+                                        .font(.myCustomFont(size: 15))
                                 }
                                 .padding()
                                 .frame(maxWidth: .infinity)

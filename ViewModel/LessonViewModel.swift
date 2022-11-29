@@ -164,9 +164,13 @@ class LessonListViewModel: NSObject, ObservableObject {
         
         let datePredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [startPredicate, endPredicate])
         
+        let sortDescriptor = NSSortDescriptor(key: "startDate", ascending: true)
+        let sortDescriptors = [sortDescriptor]
+        
         
         let request: NSFetchRequest<Lesson> = Lesson.fetchRequest()
         request.predicate = datePredicate
+        request.sortDescriptors = sortDescriptors
         var dayLessons = [LessonViewModel]()
         do { 
             let lessons = try context.fetch(request)

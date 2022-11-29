@@ -45,6 +45,7 @@ struct AddStudentView: View {
                 ColorPicker("Set a color for this student", selection: $studentColor)
                 Spacer()
             }
+            .font(.myCustomFont(size: 16))
             .padding()
             .navigationTitle("Add New Student")
             .toolbar {

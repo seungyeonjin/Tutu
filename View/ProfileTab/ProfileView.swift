@@ -8,7 +8,7 @@ struct ProfileView: View {
         VStack {
             
             
-            
+            // look up resources
             
             Button(action: {
                 viewModel.signout()

@@ -12,8 +12,16 @@ struct SignInView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 15) {
+                Text("Welcome to Tutu!")
+                    .font(.myCustomFont(size: 20))
+                    .padding()
+                Image("Tutu")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 200)
                 ZStack {
                     TextField("Email Address", text: $email)
+                        .font(.myCustomFont(size: 16))
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .padding()
@@ -24,6 +32,7 @@ struct SignInView: View {
                 
                 ZStack {
                     SecureField("Password", text: $password)
+                        .font(.myCustomFont(size: 16))
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .padding()
@@ -52,8 +61,9 @@ struct SignInView: View {
                         RoundedRectangle(cornerRadius: 4)
                             .fill(Color.gray, strokeColor: Color.black)
                         Text("Sign In")
-                            .font(.myCustomFont(size: 18))
+                            .font(.myCustomFont(size: 20))
                             .foregroundColor(Color.white)
+                            .fontWeight(.bold)
                     }
                     .frame(width: 200, height: 50)
                 })

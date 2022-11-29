@@ -21,7 +21,7 @@ struct CalendarView: View {
                         Button(action: previousMonth) {
                             ZStack {
                                 Image(systemName: "arrowtriangle.left.fill")
-                                    .foregroundColor(salmon)
+                                    .foregroundColor(.gray.opacity(0.2))
                                     .font(.system(size: 15))
                                 Image(systemName: "arrowtriangle.left")
                                     .foregroundColor(Color.black)
@@ -34,7 +34,7 @@ struct CalendarView: View {
                         Button(action: nextMonth) {
                             ZStack {
                                 Image(systemName: "arrowtriangle.right.fill")
-                                    .foregroundColor(salmon)
+                                    .foregroundColor(.gray.opacity(0.2))
                                     .font(.system(size: 15))
                                 Image(systemName: "arrowtriangle.right")
                                     .foregroundColor(Color.black)

@@ -12,11 +12,9 @@ struct ScheduleLessonCardView: View {
                 RoundedRectangle(cornerRadius: 4)
                     .fill(lesson.color, strokeColor: Color.black)
                 VStack(alignment: .leading) {
-                    Text(lesson.title)
-                        .font(.myCustomFont(size: 15))
-                    Text("\(lesson.memo)")
-                        .font(.myCustomFont(size: 13))
                     HStack() {
+                        Text(lesson.title)
+                            .font(.myCustomFont(size: 15))
                         Spacer()
                     }
                 }

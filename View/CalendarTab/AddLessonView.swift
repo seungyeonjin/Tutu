@@ -73,10 +73,16 @@ struct AddLessonView: View {
                         Text("Lesson Plan: ")
                             .font(.myCustomFont(size: 16))
                         ForEach(lessonPlans, id: \.self) { plans in
-                            HStack {
-                                Image(systemName: "stop")
-                                Text(plans)
+                            ZStack {
+                                Color.gray.opacity(0.1)
+                                HStack {
+                                    Image(systemName: "stop")
+                                    Text(plans)
+                                        .font(.myCustomFont(size: 15))
+                                }
+                                .padding(5)
                             }
+                            
                         }
                         HStack {
                             TextField("Create lesson plan",  text: $newPlan)
@@ -90,9 +96,15 @@ struct AddLessonView: View {
                                 lessonPlans.append(newPlan)
                                 newPlan = ""
                             }, label : {
-                                Image(systemName: "plus.square")
-                                    .font(.system(size: 16))
+                                ZStack {
+                                    Image(systemName: "plus.rectangle.fill")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(Color.gray.opacity(0.2))
+                                    Image(systemName: "plus.rectangle")
+                                        .font(.system(size: 20, weight: .light))
+                                        .foregroundColor(.black)
                                     
+                                }
                             })
                             
                         }

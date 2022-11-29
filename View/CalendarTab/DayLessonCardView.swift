@@ -26,11 +26,12 @@ struct DayLessonCardView: View {
                 .foregroundColor(.black)
                 VStack(alignment: .leading) {
                     Text("\(lesson.title)")
-                        .font(.caption2)
+                        .font(.myCustomFont(size: 16))
                         .foregroundColor(.black)
                         .padding(2)
                         .frame(alignment: .leading)
                     Text(lesson.memo)
+                        .font(.myCustomFont(size: 14))
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(.black)
